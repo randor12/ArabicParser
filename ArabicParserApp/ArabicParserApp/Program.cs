@@ -82,8 +82,9 @@ namespace ArabicParserApp
                         {
                             check = reader.GetString("ar");
 
-                            Console.WriteLine("\n\n" + word.Equals(check));
-                            Console.WriteLine(word + " is being checked");
+                            //Console.WriteLine("\n\n" + word.Equals(check));
+                            //Console.WriteLine(word + " is being checked");
+                            //Console.WriteLine(check + " was found in the reader");
                         }
                     }
 
@@ -166,22 +167,54 @@ namespace ArabicParserApp
             return new String(array);
         }
 
-        static void Main(string[] args)
+        /*
+         * Process files
+         * @param sDir          directory
+         */
+        public static void ProcessInputFiles(string sDir)
         {
-            //Collects all files within the articles section of wikipedia
-            string[] directory = Directory.GetFiles("C:\\Users\\rnicholas\\Documents\\ArabicFiles\\wikipedia-ar-html.tar\\ar\\articles\\ط\\س\\م", "*.html", SearchOption.AllDirectories);
+            try
+            {
 
+                /*if (sDir.IndexOf("\\INPUT") != -1)      //only process files in the INPUT directory
+                {
+                    foreach (string f in Directory.GetFiles(sDir, "*"))
+                    {
+                        processFile(f);
+                    }
+                }
+
+                foreach (string d in Directory.GetDirectories(sDir))
+                {
+                    ProcessInputFiles(d);
+                }*/
+                
+                foreach (string f in Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories))
+                {
+                    ProcessFile(f);
+                }
+
+            }
+            catch (System.Exception excpt)
+            {
+                Console.WriteLine(excpt);
+            }
+        }
+
+        /*
+         * Add words to the text file
+         * @param f         File
+         */
+        private static void ProcessFile(string f)
+        {
             FileStream fileStream = new FileStream("DispAr.txt", FileMode.Append);
 
-            BinaryWriter writer = new BinaryWriter(fileStream);
+            StreamWriter writer = new StreamWriter(fileStream);
 
-            //Console.WriteLine("The directory is: C:\\Users\\Ryan's Computer\\OneDrive\\Documents\\Arabic\\wikipedia-ar-html.tar\\wikipedia-ar-html\\ar\\articles\\ط\\س\\م \n");
-
-            //Add data to the database
             string connectionString = "Server = 127.0.0.1; User Id = root; Password = Imperium123; Database = dict;";
 
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(connectionString);
-            
+
             using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
             {
 
@@ -192,53 +225,50 @@ namespace ArabicParserApp
                 string text = "";
 
                 int count = GetId() + 1;
+                
+                var encoding = Encoding.UTF8;
 
-                int passes = 1;
+                Console.OutputEncoding = System.Text.Encoding.Unicode;
 
-                foreach (var file in directory)
+                var HtmlToString = File.ReadAllText(f, encoding);
+
+                var documents = new HtmlDocument();
+
+                documents.LoadHtml(HtmlToString);
+
+                text = documents.ParsedText;
+
+                text = Regex.Replace(text, "<[^>]*>", string.Empty);
+
+                text = Regex.Replace(text, @"^\s*$\n", string.Empty, RegexOptions.Multiline);
+
+                Console.WriteLine("Number of passes: " + passes);
+
+                passes++;
+
+                //Console.WriteLine(Reverse(text) + "\n");
+
+                Console.WriteLine("File Name: " + f.ToString());
+
+                List<string> ArabicWords = GetArabicWords(text);
+
+                foreach (var word in ArabicWords)
                 {
-                    var encoding = Encoding.UTF8;
 
-                    Console.OutputEncoding = System.Text.Encoding.Unicode;
-                    
-                    var HtmlToString = File.ReadAllText(file, encoding);
-                    
-                    var documents = new HtmlDocument();
-
-                    documents.LoadHtml(HtmlToString);
-                    
-                    text = documents.ParsedText;
-
-                    text = Regex.Replace(text, "<[^>]*>", string.Empty);
-
-                    text = Regex.Replace(text, @"^\s*$\n", string.Empty, RegexOptions.Multiline);
-
-                    Console.WriteLine("Number of passes: " + passes);
-
-                    passes++;
-
-                    Console.WriteLine(Reverse(text) + "\n");
-                    
-                    List<string> ArabicWords = GetArabicWords(text);
-                    List<string> AddedWords = new List<string>();
-
-                    foreach (var word in ArabicWords)
+                    if (!AddedWords.Contains(word))
                     {
-
-                        if (!AddedWords.Contains(word) && !ContainsWord(word))
-                        {
-                            AddedWords.Add(word);
-                            action += "INSERT INTO dict_ar VALUES (" + count +
-                                ", '" + word + "', 'N');";
-                            writer.Write(word + "\n");
-                            count += 1;
-                        }
+                        AddedWords.Add(word);
+                        //action += "INSERT INTO dict_ar VALUES (" + count +
+                        //   ", '" + word + "', 'N');";
+                        writer.WriteLine(word);
+                        count += 1;
                     }
-                    
-
-                    //Console.WriteLine(text);
-                    
                 }
+
+
+                //Console.WriteLine(text);
+
+                
                 writer.Close();
                 commandLine += action;
 
@@ -248,8 +278,28 @@ namespace ArabicParserApp
                     command.ExecuteNonQuery();
                 }
             }
+            
+        }
 
-            Console.ReadKey();
+        private static List<string> AddedWords;
+
+        private static int passes;
+
+        static void Main(string[] args)
+        {
+            //Test
+            Console.WriteLine(HasArabicGlyphs("المقال "));
+
+            Console.WriteLine(HasArabicGlyphs("hello world"));
+
+            Console.WriteLine(HasArabicGlyphs("xل"));
+
+            AddedWords = new List<string>();
+
+            passes = 1;
+
+            //Process directory
+            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicFiles\\wikipedia-ar-html.tar\\ar\\articles");
         }
     }
 }
