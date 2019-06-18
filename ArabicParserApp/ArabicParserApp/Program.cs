@@ -10,6 +10,7 @@ using System.IO;
 using HtmlAgilityPack;
 using AngleSharp;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace ArabicParserApp
 {
@@ -22,7 +23,7 @@ namespace ArabicParserApp
         {
             int num = 0;
 
-            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Mftiarc14!; Database = dict";
+            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Imperium123; Database = dict";
 
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(connectionString);
 
@@ -58,6 +59,42 @@ namespace ArabicParserApp
         public static bool ContainsWord(string word)
         {
             bool Inserted = false;
+
+            string check = "";
+
+            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Imperium123; Database = dict";
+
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(connectionString);
+
+            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
+            {
+                MySqlCommand command;
+                string commandLine = "USE dict;\n" +
+                    "SELECT ar FROM dict_ar where ar = '" + word + "';\n";
+
+                using (command = new MySqlCommand(commandLine, connection))
+                {
+                    command.Connection.Open();
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            check = reader.GetString("ar");
+
+                            Console.WriteLine("\n\n" + word.Equals(check));
+                            Console.WriteLine(word + " is being checked");
+                        }
+                    }
+
+                    if (check.Equals(word))
+                    {
+                        Inserted = true;
+                    }
+
+                }
+            }
+
 
             return Inserted;
         }
@@ -99,21 +136,39 @@ namespace ArabicParserApp
         /**
          * The purpose of this function is to extract only the words that are arabic
          */
-        /*public static string[] GetHtmlWords(string input)
+        public static List<string> GetArabicWords(string input)
         {
-            MatchCollection match = Regex.Matches(input, @"\b[\w']*\b");
-        }*/
+            string[] delimiters = new string[] { " " };
+
+            string[] words = input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+
+            List<string> ArabicWords = new List<string>();
+
+            foreach (var word in words)
+            {
+                if (HasArabicGlyphs(word))
+                {
+                    ArabicWords.Add(word);
+                }
+            }
+
+            return ArabicWords;
+        }
 
         static void Main(string[] args)
         {
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("ar-EG");
+            FileStream stream = new FileStream("DispAr.txt", FileMode.Create);
+            BinaryWriter write = new BinaryWriter(stream);
+            
             HtmlParser parser = new HtmlParser();
             //Collects all files within the articles section of wikipedia
-            string[] directory = Directory.GetFiles("C:\\Users\\Ryan's Computer\\OneDrive\\Documents\\Arabic\\wikipedia-ar-html.tar\\wikipedia-ar-html\\ar\\articles\\ط\\س\\م", "*.html", SearchOption.AllDirectories);
+            string[] directory = Directory.GetFiles("C:\\Users\\rnicholas\\Documents\\ArabicFiles\\wikipedia-ar-html.tar\\ar\\articles\\ط\\س\\م", "*.html", SearchOption.AllDirectories);
 
             //Console.WriteLine("The directory is: C:\\Users\\Ryan's Computer\\OneDrive\\Documents\\Arabic\\wikipedia-ar-html.tar\\wikipedia-ar-html\\ar\\articles\\ط\\س\\م \n");
 
             //Add data to the database
-            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Password; Database = dict";
+            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Imperium123; Database = dict;";
 
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(connectionString);
             
@@ -127,39 +182,52 @@ namespace ArabicParserApp
                 string text = "";
 
                 int count = GetId() + 1;
-                
+
+                int passes = 1;
+
                 foreach (var file in directory)
                 {
-                    var documents = new HtmlWeb();
+                    var HtmlToString = File.ReadAllText(file);
+                    
+                    var documents = new HtmlDocument();
 
-                    documents.Load(file);
+                    documents.LoadHtml(HtmlToString);
 
-                    var htmlDoc = documents.Load(file);
+                    text = documents.ParsedText;
 
-                    var node = htmlDoc.DocumentNode;
+                    Console.WriteLine("Number of passes: " + passes);
 
-                    text = node.OuterHtml + "\n\n";
+                    passes++;
+
+                    write.Write(text + "\n");
 
                     text = Regex.Replace(text, "<[^>]*>", string.Empty);
 
                     text = Regex.Replace(text, @"^\s*$\n", string.Empty, RegexOptions.Multiline);
                     
-                    foreach (var word in text)
+                    List<string> ArabicWords = GetArabicWords(text);
+                    List<string> AddedWords = new List<string>();
+
+                    foreach (var word in ArabicWords)
                     {
 
-                        if (HasArabicGlyphs(word.ToString()) && !ContainsWord(word.ToString()))
+                        if (!ContainsWord(word) && !AddedWords.Contains(word))
                         {
+                            AddedWords.Add(word);
                             action += "INSERT INTO dict_ar VALUES (" +
                                 count + ", '" + word + "', 'N'" +
                                 ");\n";
-
+                            
                             count += 1;
                         }
-
-                        Console.WriteLine(text);
                     }
+                    
+
+                    //Console.WriteLine(text);
+                    
                 }
 
+                write.Close();
 
                 commandLine += action;
 
