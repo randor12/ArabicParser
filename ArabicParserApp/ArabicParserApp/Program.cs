@@ -155,10 +155,25 @@ namespace ArabicParserApp
             return ArabicWords;
         }
 
+        /*
+         * Reverse text
+         */
+        public static string Reverse(string text)
+        {
+            if (text == null) return null;
+            char[] array = text.ToCharArray();
+            Array.Reverse(array);
+            return new String(array);
+        }
+
         static void Main(string[] args)
         {
             //Collects all files within the articles section of wikipedia
             string[] directory = Directory.GetFiles("C:\\Users\\rnicholas\\Documents\\ArabicFiles\\wikipedia-ar-html.tar\\ar\\articles\\ط\\س\\م", "*.html", SearchOption.AllDirectories);
+
+            FileStream fileStream = new FileStream("DispAr.txt", FileMode.Append);
+
+            BinaryWriter writer = new BinaryWriter(fileStream);
 
             //Console.WriteLine("The directory is: C:\\Users\\Ryan's Computer\\OneDrive\\Documents\\Arabic\\wikipedia-ar-html.tar\\wikipedia-ar-html\\ar\\articles\\ط\\س\\م \n");
 
@@ -182,14 +197,16 @@ namespace ArabicParserApp
 
                 foreach (var file in directory)
                 {
-                    var encoding = Encoding.Unicode;
+                    var encoding = Encoding.UTF8;
 
+                    Console.OutputEncoding = System.Text.Encoding.Unicode;
+                    
                     var HtmlToString = File.ReadAllText(file, encoding);
                     
                     var documents = new HtmlDocument();
 
                     documents.LoadHtml(HtmlToString);
-
+                    
                     text = documents.ParsedText;
 
                     text = Regex.Replace(text, "<[^>]*>", string.Empty);
@@ -200,7 +217,7 @@ namespace ArabicParserApp
 
                     passes++;
 
-                    Console.WriteLine(text + "\n");
+                    Console.WriteLine(Reverse(text) + "\n");
                     
                     List<string> ArabicWords = GetArabicWords(text);
                     List<string> AddedWords = new List<string>();
@@ -211,10 +228,9 @@ namespace ArabicParserApp
                         if (!AddedWords.Contains(word) && !ContainsWord(word))
                         {
                             AddedWords.Add(word);
-                            action += "INSERT INTO dict_ar VALUES (" +
-                                count + ", '" + word + "', 'N'" +
-                                ");\n";
-                            
+                            action += "INSERT INTO dict_ar VALUES (" + count +
+                                ", '" + word + "', 'N');";
+                            writer.Write(word + "\n");
                             count += 1;
                         }
                     }
@@ -223,7 +239,7 @@ namespace ArabicParserApp
                     //Console.WriteLine(text);
                     
                 }
-                
+                writer.Close();
                 commandLine += action;
 
                 using (command = new MySqlCommand(commandLine, connection))
