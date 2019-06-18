@@ -157,11 +157,6 @@ namespace ArabicParserApp
 
         static void Main(string[] args)
         {
-            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("ar-EG");
-            FileStream stream = new FileStream("DispAr.txt", FileMode.Create);
-            BinaryWriter write = new BinaryWriter(stream);
-            
-            HtmlParser parser = new HtmlParser();
             //Collects all files within the articles section of wikipedia
             string[] directory = Directory.GetFiles("C:\\Users\\rnicholas\\Documents\\ArabicFiles\\wikipedia-ar-html.tar\\ar\\articles\\ط\\س\\م", "*.html", SearchOption.AllDirectories);
 
@@ -187,7 +182,9 @@ namespace ArabicParserApp
 
                 foreach (var file in directory)
                 {
-                    var HtmlToString = File.ReadAllText(file);
+                    var encoding = Encoding.Unicode;
+
+                    var HtmlToString = File.ReadAllText(file, encoding);
                     
                     var documents = new HtmlDocument();
 
@@ -195,15 +192,15 @@ namespace ArabicParserApp
 
                     text = documents.ParsedText;
 
+                    text = Regex.Replace(text, "<[^>]*>", string.Empty);
+
+                    text = Regex.Replace(text, @"^\s*$\n", string.Empty, RegexOptions.Multiline);
+
                     Console.WriteLine("Number of passes: " + passes);
 
                     passes++;
 
-                    write.Write(text + "\n");
-
-                    text = Regex.Replace(text, "<[^>]*>", string.Empty);
-
-                    text = Regex.Replace(text, @"^\s*$\n", string.Empty, RegexOptions.Multiline);
+                    Console.WriteLine(text + "\n");
                     
                     List<string> ArabicWords = GetArabicWords(text);
                     List<string> AddedWords = new List<string>();
@@ -211,7 +208,7 @@ namespace ArabicParserApp
                     foreach (var word in ArabicWords)
                     {
 
-                        if (!ContainsWord(word) && !AddedWords.Contains(word))
+                        if (!AddedWords.Contains(word) && !ContainsWord(word))
                         {
                             AddedWords.Add(word);
                             action += "INSERT INTO dict_ar VALUES (" +
@@ -226,9 +223,7 @@ namespace ArabicParserApp
                     //Console.WriteLine(text);
                     
                 }
-
-                write.Close();
-
+                
                 commandLine += action;
 
                 using (command = new MySqlCommand(commandLine, connection))
