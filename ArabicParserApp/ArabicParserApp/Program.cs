@@ -96,6 +96,25 @@ namespace ArabicParserApp
             return Inserted;
         }
 
+        public static bool CheckEnglishLetter(string word)
+        {
+            bool isEnglish = false;
+            
+            foreach (char c in word)
+            {
+                Console.WriteLine(c);
+                string input = c.ToString();
+                bool isLetter = Regex.IsMatch(input, "[a-z]", RegexOptions.IgnoreCase);
+
+                if (isLetter)
+                {
+                    isEnglish = true;
+                }
+            }
+
+            return isEnglish;
+        }
+
         /**
          * Determines if a character is arabic
          * @param text          Text
@@ -145,7 +164,10 @@ namespace ArabicParserApp
             {
                 if (HasArabicGlyphs(word))
                 {
-                    ArabicWords.Add(word);
+                    if (!CheckEnglishLetter(word))
+                    {
+                        ArabicWords.Add(word);
+                    }
                 }
             }
 
@@ -264,7 +286,9 @@ namespace ArabicParserApp
 
             Console.WriteLine(HasArabicGlyphs("hello world"));
 
-            Console.WriteLine(HasArabicGlyphs("xل"));
+            Console.WriteLine(HasArabicGlyphs("xل") && CheckEnglishLetter("xل"));
+
+            Console.ReadKey();
 
             AddedWords = new List<string>();
 
