@@ -310,9 +310,9 @@ namespace ArabicParserApp
 
             Console.WriteLine(HasArabicGlyphs("xل") && CheckEnglishLetter("xل")); //should be true
 
-            Console.WriteLine(CheckNumbers("1"));
+            Console.WriteLine(CheckNumbers("1") && CheckNumbers("09a")); //Should be true
 
-            Console.WriteLine(CheckNumbers("a"));
+            Console.WriteLine(CheckNumbers("a")); //should be false
 
             Console.ReadKey();
 
