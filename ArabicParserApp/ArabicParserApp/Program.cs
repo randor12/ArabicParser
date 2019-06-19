@@ -211,77 +211,63 @@ namespace ArabicParserApp
          */
         private static void ProcessFile(string f)
         {
-            FileStream fileStream = new FileStream("DispAr.txt", FileMode.Append);
+            FileStream fileStream = new FileStream("DispArBad.txt", FileMode.Append);
 
             StreamWriter writer = new StreamWriter(fileStream);
+            
+            string commandLine = "USE dict;\n";
+            string action = "";
 
-            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Imperium123; Database = dict;";
+            string text = "";
 
-            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(connectionString);
+            int count = 0;
+                
+            var encoding = Encoding.UTF8;
 
-            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+
+            var HtmlToString = File.ReadAllText(f, encoding);
+
+            var documents = new HtmlDocument();
+
+            documents.LoadHtml(HtmlToString);
+
+            text = documents.ParsedText;
+
+            text = Regex.Replace(text, "<[^>]*>", string.Empty);
+
+            text = Regex.Replace(text, @"^\s*$\n", string.Empty, RegexOptions.Multiline);
+
+            Console.WriteLine("Number of articles: " + passes + " out of " + numFiles);
+
+            passes++;
+
+            //Console.WriteLine(Reverse(text) + "\n");
+
+            Console.WriteLine("File Name: " + f.ToString());
+
+            List<string> ArabicWords = GetArabicWords(text);
+
+            foreach (var word in ArabicWords)
             {
 
-                MySqlCommand command;
-                string commandLine = "USE dict;\n";
-                string action = "";
-
-                string text = "";
-
-                int count = 0;
-                
-                var encoding = Encoding.UTF8;
-
-                Console.OutputEncoding = System.Text.Encoding.Unicode;
-
-                var HtmlToString = File.ReadAllText(f, encoding);
-
-                var documents = new HtmlDocument();
-
-                documents.LoadHtml(HtmlToString);
-
-                text = documents.ParsedText;
-
-                text = Regex.Replace(text, "<[^>]*>", string.Empty);
-
-                text = Regex.Replace(text, @"^\s*$\n", string.Empty, RegexOptions.Multiline);
-
-                Console.WriteLine("Number of articles: " + passes + " out of " + numFiles);
-
-                passes++;
-
-                //Console.WriteLine(Reverse(text) + "\n");
-
-                Console.WriteLine("File Name: " + f.ToString());
-
-                List<string> ArabicWords = GetArabicWords(text);
-
-                foreach (var word in ArabicWords)
+                if (!AddedWords.Contains(word))
                 {
-
-                    if (!AddedWords.Contains(word))
-                    {
-                        AddedWords.Add(word);
-                        //action += "INSERT INTO dict_ar VALUES (" + count +
-                        //   ", '" + word + "', 'N');";
-                        writer.WriteLine(word);
-                        count += 1;
-                    }
-                }
-
-                Console.WriteLine("Words downloaded: " + count);
-                //Console.WriteLine(text);
-
-                
-                writer.Close();
-                commandLine += action;
-
-                using (command = new MySqlCommand(commandLine, connection))
-                {
-                    command.Connection.Open();
-                    command.ExecuteNonQuery();
+                    AddedWords.Add(word);
+                    //action += "INSERT INTO dict_ar VALUES (" + count +
+                    //   ", '" + word + "', 'N');";
+                    writer.WriteLine(word);
+                    count += 1;
                 }
             }
+
+            Console.WriteLine("Words downloaded: " + count);
+            //Console.WriteLine(text);
+
+                
+            writer.Close();
+            commandLine += action;
+            
             
         }
 
@@ -303,7 +289,7 @@ namespace ArabicParserApp
             passes = 1;
 
             //Process directory
-            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicFiles\\wikipedia-ar-html.tar\\ar\\articles");
+            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicBadWords");
         }
     }
 }
