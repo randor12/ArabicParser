@@ -96,13 +96,15 @@ namespace ArabicParserApp
             return Inserted;
         }
 
+        /*
+         * Checks if the letter is [a - z]
+         */
         public static bool CheckEnglishLetter(string word)
         {
             bool isEnglish = false;
             
             foreach (char c in word)
             {
-                Console.WriteLine(c);
                 string input = c.ToString();
                 bool isLetter = Regex.IsMatch(input, "[a-z]", RegexOptions.IgnoreCase);
 
@@ -113,6 +115,27 @@ namespace ArabicParserApp
             }
 
             return isEnglish;
+        }
+
+        /*
+         * Check for numbers
+         */
+        public static bool CheckNumbers(string word)
+        {
+            bool hasNumbers = false;
+
+            foreach (var c in word)
+            {
+                string input = c.ToString();
+                bool isNumber = Regex.IsMatch(input, "[0-9]", RegexOptions.Compiled);
+
+                if (isNumber)
+                {
+                    hasNumbers = true;
+                }
+            }
+
+            return hasNumbers;
         }
 
         /**
@@ -286,6 +309,10 @@ namespace ArabicParserApp
             Console.WriteLine(HasArabicGlyphs("hello world")); //Should be false
 
             Console.WriteLine(HasArabicGlyphs("xل") && CheckEnglishLetter("xل")); //should be true
+
+            Console.WriteLine(CheckNumbers("1"));
+
+            Console.WriteLine(CheckNumbers("a"));
 
             Console.ReadKey();
 
