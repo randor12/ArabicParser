@@ -7,8 +7,6 @@ using MySql.Data.MySqlClient;
 using System.IO;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 namespace ArabicParserApp
 {
@@ -219,7 +217,7 @@ namespace ArabicParserApp
          */
         private static void ProcessFile(string f)
         {
-            FileStream fileStream = new FileStream("DispArBad.txt", FileMode.Append);
+            FileStream fileStream = new FileStream("DispAr.txt", FileMode.Append);
 
             StreamWriter writer = new StreamWriter(fileStream);
             
