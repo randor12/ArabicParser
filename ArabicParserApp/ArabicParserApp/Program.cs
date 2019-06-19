@@ -7,6 +7,8 @@ using MySql.Data.MySqlClient;
 using System.IO;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace ArabicParserApp
 {
@@ -197,8 +199,10 @@ namespace ArabicParserApp
 
                 foreach (string f in Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories))
                 {
+                    Console.WriteLine(f.ToString());
                     ProcessFile(f);
                 }
+                
 
             }
             catch (System.Exception excpt)
@@ -219,8 +223,6 @@ namespace ArabicParserApp
 
             StreamWriter writer = new StreamWriter(fileStream);
             
-            string commandLine = "USE dict;\n";
-            string action = "";
 
             string text = "";
 
@@ -270,11 +272,10 @@ namespace ArabicParserApp
 
                 
             writer.Close();
-            commandLine += action;
             
             
         }
-
+        
         private static List<string> AddedWords;
 
         private static int passes;
@@ -282,11 +283,11 @@ namespace ArabicParserApp
         static void Main(string[] args)
         {
             //Test
-            Console.WriteLine(HasArabicGlyphs("المقال "));
+            Console.WriteLine(HasArabicGlyphs("المقال ")); //Should be true
 
-            Console.WriteLine(HasArabicGlyphs("hello world"));
+            Console.WriteLine(HasArabicGlyphs("hello world")); //Should be false
 
-            Console.WriteLine(HasArabicGlyphs("xل") && CheckEnglishLetter("xل"));
+            Console.WriteLine(HasArabicGlyphs("xل") && CheckEnglishLetter("xل")); //should be true
 
             Console.ReadKey();
 
@@ -295,7 +296,11 @@ namespace ArabicParserApp
             passes = 1;
 
             //Process directory
-            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicBadWords");
+            ProcessInputFiles(" (Enter Directory Here) ");
+
+            Console.WriteLine("Completed");
+
+            Console.ReadKey();
         }
     }
 }
