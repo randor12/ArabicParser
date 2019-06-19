@@ -21,7 +21,7 @@ namespace ArabicParserApp
         {
             int num = 0;
 
-            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Imperium123; Database = dict";
+            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Password; Database = dict";
 
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(connectionString);
 
@@ -60,7 +60,7 @@ namespace ArabicParserApp
 
             string check = "";
 
-            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Imperium123; Database = dict";
+            string connectionString = "Server = 127.0.0.1; User Id = root; Password = Password; Database = dict";
 
             MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder(connectionString);
 
