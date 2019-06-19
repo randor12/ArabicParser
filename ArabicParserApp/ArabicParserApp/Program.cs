@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AngleSharp.Html;
-using AngleSharp.Html.Parser;
 using MySql.Data.MySqlClient;
 using System.IO;
 using HtmlAgilityPack;
-using AngleSharp;
 using System.Text.RegularExpressions;
-using System.Globalization;
 
 namespace ArabicParserApp
 {
@@ -175,20 +171,6 @@ namespace ArabicParserApp
         {
             try
             {
-
-                /*if (sDir.IndexOf("\\INPUT") != -1)      //only process files in the INPUT directory
-                {
-                    foreach (string f in Directory.GetFiles(sDir, "*"))
-                    {
-                        processFile(f);
-                    }
-                }
-
-                foreach (string d in Directory.GetDirectories(sDir))
-                {
-                    ProcessInputFiles(d);
-                }*/
-
                 numFiles = Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories).Length;
 
                 foreach (string f in Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories))
