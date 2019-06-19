@@ -188,7 +188,9 @@ namespace ArabicParserApp
                 {
                     ProcessInputFiles(d);
                 }*/
-                
+
+                numFiles = Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories).Length;
+
                 foreach (string f in Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories))
                 {
                     ProcessFile(f);
@@ -200,6 +202,8 @@ namespace ArabicParserApp
                 Console.WriteLine(excpt);
             }
         }
+
+        private static int numFiles;
 
         /*
          * Add words to the text file
@@ -224,7 +228,7 @@ namespace ArabicParserApp
 
                 string text = "";
 
-                int count = GetId() + 1;
+                int count = 0;
                 
                 var encoding = Encoding.UTF8;
 
@@ -242,7 +246,7 @@ namespace ArabicParserApp
 
                 text = Regex.Replace(text, @"^\s*$\n", string.Empty, RegexOptions.Multiline);
 
-                Console.WriteLine("Number of passes: " + passes);
+                Console.WriteLine("Number of articles: " + passes + " out of " + numFiles);
 
                 passes++;
 
@@ -265,7 +269,7 @@ namespace ArabicParserApp
                     }
                 }
 
-
+                Console.WriteLine("Words downloaded: " + count);
                 //Console.WriteLine(text);
 
                 
