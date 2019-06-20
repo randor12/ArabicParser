@@ -288,7 +288,7 @@ namespace ArabicParserApp
                 {
                     AddedWords.Add(word);
                     //action += "INSERT INTO dict_ar VALUES (" + count +
-                    //   ", '" + word + "', 'N');";
+                    //   ", N'" + word + "', 'N');";
                     writer.WriteLine(word);
                     count += 1;
                 }
