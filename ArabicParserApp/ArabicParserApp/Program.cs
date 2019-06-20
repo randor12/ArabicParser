@@ -326,7 +326,9 @@ namespace ArabicParserApp
 
             passes = 1;
 
-            //Process directory
+            /****************************************************************************
+             *Process directory
+             ****************************************************************************/
             ProcessInputFiles(" (Enter Directory Here) ");
 
             Console.WriteLine("Completed");
