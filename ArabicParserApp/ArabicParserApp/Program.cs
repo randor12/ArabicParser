@@ -189,7 +189,13 @@ namespace ArabicParserApp
                 {
                     if (!CheckEnglishLetter(word))
                     {
-                        ArabicWords.Add(word);
+                        if (!CheckNumbers(word))
+                        {
+                            if (word.Length <= 4000)
+                            {
+                                ArabicWords.Add(word);
+                            }
+                        }
                     }
                 }
             }
