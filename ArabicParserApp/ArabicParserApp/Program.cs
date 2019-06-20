@@ -269,7 +269,7 @@ namespace ArabicParserApp
 
             text = Regex.Replace(text, "<[^>]*>", string.Empty);
 
-            text = Regex.Replace(text, @"^\s*$\n", string.Empty, RegexOptions.Multiline);
+            text = Regex.Replace(text, @"^\s*$\n", " ", RegexOptions.Multiline);
 
             Console.WriteLine("Number of articles: " + passes + " out of " + numFiles);
 
