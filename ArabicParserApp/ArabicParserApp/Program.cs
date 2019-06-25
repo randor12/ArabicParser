@@ -343,6 +343,8 @@ namespace ArabicParserApp
             ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicArticles");
 
             Console.WriteLine("Completed");
+
+            Console.ReadKey();
         }
     }
 }
