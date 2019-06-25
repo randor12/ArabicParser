@@ -226,7 +226,6 @@ namespace ArabicParserApp
 
                 foreach (string f in Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories))
                 {
-                    Console.WriteLine(f.ToString());
                     ProcessFile(f);
                 }
                 
@@ -246,7 +245,7 @@ namespace ArabicParserApp
          */
         private static void ProcessFile(string f)
         {
-            FileStream fileStream = new FileStream("DispAr.txt", FileMode.Append);
+            FileStream fileStream = new FileStream("ArArticle.txt", FileMode.Append);
 
             StreamWriter writer = new StreamWriter(fileStream);
             
@@ -329,7 +328,7 @@ namespace ArabicParserApp
             /****************************************************************************
              *Process directory
              ****************************************************************************/
-            ProcessInputFiles(" (Enter Directory Here) ");
+            ProcessInputFiles("C:\\Users\\rnicholas\\Documents");
 
             Console.WriteLine("Completed");
 
