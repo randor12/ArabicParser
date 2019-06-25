@@ -337,7 +337,7 @@ namespace ArabicParserApp
             /****************************************************************************
              *Process directory
              ****************************************************************************/
-            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\");
+            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicArticles");
 
             Console.WriteLine("Completed");
 
