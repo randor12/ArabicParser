@@ -254,7 +254,7 @@ namespace ArabicParserApp
          */
         private static void ProcessFile(string f)
         {
-            FileStream fileStream = new FileStream("ArArticle.txt", FileMode.Append);
+            FileStream fileStream = new FileStream("ArArticleNew.txt", FileMode.Append);
 
             StreamWriter writer = new StreamWriter(fileStream);
             
@@ -318,6 +318,8 @@ namespace ArabicParserApp
         static void Main(string[] args)
         {
             //Test
+
+            /*
             Console.WriteLine(HasArabicGlyphs("المقال ")); //Should be true
 
             Console.WriteLine(HasArabicGlyphs("hello world")); //Should be false
@@ -329,6 +331,7 @@ namespace ArabicParserApp
             Console.WriteLine(CheckNumbers("a")); //should be false
 
             Console.ReadKey();
+            */
 
             AddedWords = new List<string>();
 
@@ -340,8 +343,6 @@ namespace ArabicParserApp
             ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicArticles");
 
             Console.WriteLine("Completed");
-
-            Console.ReadKey();
         }
     }
 }
