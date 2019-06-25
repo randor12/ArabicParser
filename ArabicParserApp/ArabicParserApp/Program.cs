@@ -227,7 +227,7 @@ namespace ArabicParserApp
                 /*************************************************************
                  * SELECT BELOW FOR ALL FILES WITHIN THE DIRECTORY (INCLUDING SUB FILES)
                  * 
-                 * WILL NEED TO ADD "SearchOption.AllDirectories" below
+                 * WILL NEED TO ADD "SearchOption.AllDirectories" below in for loop
                  * 
                  *numFiles = Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories).Length;
                  *************************************************************/
