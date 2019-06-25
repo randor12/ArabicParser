@@ -222,9 +222,18 @@ namespace ArabicParserApp
         {
             try
             {
-                numFiles = Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories).Length;
+                numFiles = Directory.GetFiles(sDir, "*.html").Length;
 
-                foreach (string f in Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories))
+                /*************************************************************
+                 * SELECT BELOW FOR ALL FILES WITHIN THE DIRECTORY (INCLUDING SUB FILES)
+                 * 
+                 * WILL NEED TO ADD "SearchOption.AllDirectories" below
+                 * 
+                 *numFiles = Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories).Length;
+                 *************************************************************/
+
+
+                foreach (string f in Directory.GetFiles(sDir, "*.html"))
                 {
                     ProcessFile(f);
                 }
@@ -328,7 +337,7 @@ namespace ArabicParserApp
             /****************************************************************************
              *Process directory
              ****************************************************************************/
-            ProcessInputFiles("C:\\Users\\rnicholas\\Documents");
+            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\");
 
             Console.WriteLine("Completed");
 
