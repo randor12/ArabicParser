@@ -254,7 +254,7 @@ namespace ArabicParserApp
          */
         private static void ProcessFile(string f)
         {
-            FileStream fileStream = new FileStream("ArArticleNew.txt", FileMode.Append);
+            FileStream fileStream = new FileStream("ArArticleNew.txt", FileMode.Create);
 
             StreamWriter writer = new StreamWriter(fileStream);
             
