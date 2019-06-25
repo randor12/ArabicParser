@@ -320,6 +320,7 @@ namespace ArabicParserApp
             //Test
 
             /*
+             * This is just a Test Below 
             Console.WriteLine(HasArabicGlyphs("المقال ")); //Should be true
 
             Console.WriteLine(HasArabicGlyphs("hello world")); //Should be false
