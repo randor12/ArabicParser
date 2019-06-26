@@ -233,13 +233,13 @@ namespace ArabicParserApp
             {
                 numFiles = Directory.GetFiles(sDir, "*.html").Length;
 
-                /*************************************************************
+                /***************************************************************************************************
                  * SELECT BELOW FOR ALL FILES WITHIN THE DIRECTORY (INCLUDING SUB FILES)
                  * 
                  * WILL NEED TO ADD "SearchOption.AllDirectories" below in for loop
                  * 
                  *numFiles = Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories).Length;
-                 *************************************************************/
+                 ****************************************************************************************************/
 
 
                 foreach (string f in Directory.GetFiles(sDir, "*.html"))
