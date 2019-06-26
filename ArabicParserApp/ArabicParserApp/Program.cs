@@ -66,7 +66,7 @@ namespace ArabicParserApp
             {
                 MySqlCommand command;
                 string commandLine = "USE dict;\n" +
-                    "SELECT ar FROM dict_ar where ar = '" + word + "';\n";
+                    "SELECT word FROM dict_ar where word LIKE N'" + word + "';\n";
 
                 using (command = new MySqlCommand(commandLine, connection))
                 {
