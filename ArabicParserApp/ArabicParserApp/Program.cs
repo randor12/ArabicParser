@@ -8,6 +8,14 @@ using System.IO;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 
+/*
+ * IF YOU DO NOT HAVE PACKAGE(S) ABOVE, USE NuGet TO DOWNLOAD THEM
+ * (TOOLS -> NuGet Package Manager -> Package Manager Console)
+ * 
+ * LOOK UP THE PACKAGES ONLINE TO LEARN HOW TO INSTALL THEM
+ * (Install-Package <PackageName> -Version <#.#.#>)
+ */
+
 namespace ArabicParserApp
 {
     class Program
