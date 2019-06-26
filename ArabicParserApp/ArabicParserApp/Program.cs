@@ -177,7 +177,8 @@ namespace ArabicParserApp
          */
         public static List<string> GetArabicWords(string input)
         {
-            string[] delimiters = new string[] { " " };
+            string[] delimiters = new string[] { " ", ".", "!", "\"", ":", ";", "#", "(", ")", ",", "'", "{", "}", "-", "%",
+            "؟", "،", "”", "“", "‘", "؛", "`", "?", ",", "\n", "\t"};
 
             string[] words = input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
