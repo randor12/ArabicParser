@@ -153,12 +153,12 @@ namespace ArabicParserApp
          */
         public static bool HasArabicGlyphs(string text)
         {
-            bool isArabic = false;
-
             char[] glyphs = text.ToCharArray();
 
             foreach (char glyph in glyphs)
             {
+                bool isArabic = false;
+
                 if (glyph >= 0x600 && glyph <= 0x6ff)
                 {
                     isArabic = true;
@@ -175,9 +175,14 @@ namespace ArabicParserApp
                 {
                     isArabic = true;
                 }
+
+                if (!isArabic)
+                {
+                    return false;
+                }
             }
 
-            return isArabic;
+            return true;
         }
 
         /**
@@ -186,7 +191,7 @@ namespace ArabicParserApp
         public static List<string> GetArabicWords(string input)
         {
             string[] delimiters = new string[] { " ", "_", ".", "!", "\"", ":", ";", "#", "(", ")", ",", "'", "{", "}", "-", "%",
-            "؟", "،", "”", "“", "‘", "؛", "`", "?", ",", "+", "=", "\n", "\t"};
+            "؟", "،", "”", "“", "‘", "؛", "`", "?", ",", "+", "=", "\\", "\n", "\t"};
 
             string[] words = input.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
@@ -330,11 +335,11 @@ namespace ArabicParserApp
 
             /*
              * This is just a Test Below 
-            Console.WriteLine(HasArabicGlyphs("المقال ")); //Should be true
+            Console.WriteLine(HasArabicGlyphs("المقال")); //Should be true
 
             Console.WriteLine(HasArabicGlyphs("hello world")); //Should be false
 
-            Console.WriteLine(HasArabicGlyphs("xل") && CheckEnglishLetter("xل")); //should be true
+            Console.WriteLine(HasArabicGlyphs("xل")); //should be false
 
             Console.WriteLine(CheckNumbers("1") && CheckNumbers("09a")); //Should be true
 
