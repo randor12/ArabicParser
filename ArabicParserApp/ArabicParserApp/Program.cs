@@ -147,9 +147,9 @@ namespace ArabicParserApp
         }
 
         /**
-         * Determines if a character is arabic
+         * Determines if a word is arabic
          * @param text          Text
-         * @return isArabic         Returns true if the character is an arabic glyph
+         * @return isArabic         Returns true if the whole word is arabic
          */
         public static bool HasArabicGlyphs(string text)
         {
