@@ -236,7 +236,7 @@ namespace ArabicParserApp
         {
             try
             {
-                numFiles = Directory.GetFiles(sDir, "*.html").Length;
+                numFiles = Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories).Length;
 
                 /***************************************************************************************************
                  * SELECT BELOW FOR ALL FILES WITHIN THE DIRECTORY (INCLUDING SUB FILES)
@@ -244,10 +244,12 @@ namespace ArabicParserApp
                  * WILL NEED TO ADD "SearchOption.AllDirectories" below in for loop
                  * 
                  *numFiles = Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories).Length;
+                 * 
+                 * Remove to only search selected file (not subfolders)
                  ****************************************************************************************************/
 
 
-                foreach (string f in Directory.GetFiles(sDir, "*.html"))
+                foreach (string f in Directory.GetFiles(sDir, "*.html", SearchOption.AllDirectories))
                 {
                     ProcessFile(f);
                 }
@@ -355,11 +357,11 @@ namespace ArabicParserApp
             /****************************************************************************
              *Process directory
              ****************************************************************************/
-            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicWordFiles");
+            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicFiles\\wikipedia-ar-html.tar\\ar\\articles");
 
             Console.WriteLine("Completed");
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
