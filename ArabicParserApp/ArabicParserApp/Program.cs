@@ -268,7 +268,7 @@ namespace ArabicParserApp
          */
         private static void ProcessFile(string f)
         {
-            FileStream fileStream = new FileStream("ArArticleNew.txt", FileMode.Append);
+            FileStream fileStream = new FileStream("ParseArabic.txt", FileMode.Append);
 
             StreamWriter writer = new StreamWriter(fileStream);
             
@@ -355,7 +355,7 @@ namespace ArabicParserApp
             /****************************************************************************
              *Process directory
              ****************************************************************************/
-            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicArticles");
+            ProcessInputFiles("C:\\Users\\rnicholas\\Documents\\ArabicWordFiles");
 
             Console.WriteLine("Completed");
 
